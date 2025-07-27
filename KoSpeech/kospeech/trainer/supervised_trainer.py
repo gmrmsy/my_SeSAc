@@ -136,7 +136,8 @@ class SupervisedTrainer(object):
             start_epoch = resume_checkpoint.epoch + 1
             epoch_time_step = 0
 
-            epoch_time_step += len(self.trainset_list)
+            for trainset in self.trainset_list:
+                epoch_time_step += len(trainset)
 
             epoch_time_step = math.ceil(epoch_time_step / batch_size)
 
@@ -147,7 +148,8 @@ class SupervisedTrainer(object):
             logger.info('Epoch %d start' % epoch)
             train_queue = queue.Queue(self.num_workers << 1)
 
-            self.trainset_list.shuffle()
+            for trainset in self.trainset_list:
+                trainset.shuffle()
 
             # Training
             train_loader = MultiDataLoader(
