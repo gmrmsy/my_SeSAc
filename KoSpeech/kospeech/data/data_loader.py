@@ -66,7 +66,7 @@ class SpectrogramDataset(Dataset, SpectrogramParser):
         self._augment(spec_augment)
         self.shuffle()
 
-    def get_item(self, idx):
+    def __getitem__(self, idx):
         """ get feature vector & transcript """
         feature = self.parse_audio(os.path.join(self.dataset_path, self.audio_paths[idx]), self.augment_methods[idx])
         
