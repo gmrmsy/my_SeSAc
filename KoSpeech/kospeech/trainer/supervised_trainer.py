@@ -147,6 +147,7 @@ class SupervisedTrainer(object):
         for epoch in range(start_epoch, num_epochs):
             print()
             print(f"Epoch: {epoch} / {num_epochs}")
+            epoch_start_time = time.time()
             logger.info('Epoch %d start' % epoch)
             train_queue = queue.Queue(self.num_workers << 1)
 
@@ -187,6 +188,12 @@ class SupervisedTrainer(object):
             self._save_epoch_result(train_result=[self.train_dict, train_loss, train_cer],
                                      valid_result=[self.valid_dict, train_loss, valid_cer])
             logger.info('Epoch %d Training result saved as a csv file complete !!' % epoch)
+            epoch_end_time = time.time()
+            elapsed = epoch_end_time - epoch_start_time
+            h = elapsed // 3600
+            m = (elapsed % 3600) // 60
+            s = elapsed % 60
+            print(f"경과 시간: {h:.2f}h {m:.2f}m {s:.2f}s")
             torch.cuda.empty_cache()
 
         Checkpoint(model, self.optimizer, self.trainset_list, self.validset, num_epochs).save()
@@ -234,6 +241,7 @@ class SupervisedTrainer(object):
         num_workers = self.num_workers
 
         while True:
+            st_time = time.time()
             inputs, targets, input_lengths, target_lengths = queue.get()
 
             if inputs.shape[0] == 0:
@@ -304,7 +312,12 @@ class SupervisedTrainer(object):
                             self.optimizer.get_lr(),
                         ))
                 begin_time = time.time()
-            print(f"step: {timestep}/{epoch_time_step}, loss: {loss:.4f}, cer: {cer:.2f}")
+            end_time = time.time()
+            elapsed = end_time - st_time
+            h = elapsed // 3600
+            m = (elapsed % 3600) // 60
+            s = elapsed % 60
+            print(f"step: {timestep}/{epoch_time_step}, loss: {loss:.4f}, cer: {cer:.2f}, time: {h}h {m}m {s}s")
 
             if timestep % self.save_result_every == 0:
                 self._save_step_result(self.train_step_result, epoch_loss_total / total_num, cer)
@@ -359,6 +372,7 @@ class SupervisedTrainer(object):
                 
             cer = self.metric(targets[:, 1:], y_hats)
 
+        print(f"validation_cer: {cer}")
         self._save_result(target_list, predict_list)
         logger.info('validate() completed')
 
