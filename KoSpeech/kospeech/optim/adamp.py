@@ -104,6 +104,6 @@ class AdamP(Optimizer):
                     p.data.mul_(1 - group['lr'] * group['weight_decay'] * wd_ratio)
 
                 # Step
-                p.data.add_(-step_size, perturb)
+                p.data.add_(perturb, alpha=-step_size)
 
         return loss
