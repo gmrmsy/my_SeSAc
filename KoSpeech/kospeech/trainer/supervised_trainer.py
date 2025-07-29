@@ -145,6 +145,8 @@ class SupervisedTrainer(object):
         train_begin_time = time.time()
 
         for epoch in range(start_epoch, num_epochs):
+            print()
+            print(f"Epoch: {epoch} / {num_epochs}")
             logger.info('Epoch %d start' % epoch)
             train_queue = queue.Queue(self.num_workers << 1)
 
@@ -313,6 +315,7 @@ class SupervisedTrainer(object):
 
         Checkpoint(model, self.optimizer, self.trainset_list, self.validset, epoch).save()
         logger.info('train() completed')
+        print(f"epoch_loss_total / total_num: {epoch_loss_total / total_num}, cer: {cer}")
 
         return model, epoch_loss_total / total_num, cer
 
