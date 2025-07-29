@@ -314,10 +314,10 @@ class SupervisedTrainer(object):
                 begin_time = time.time()
             end_time = time.time()
             elapsed = end_time - st_time
-            h = elapsed // 3600
-            m = (elapsed % 3600) // 60
+            h = int(elapsed // 3600)
+            m = int((elapsed % 3600) // 60)
             s = elapsed % 60
-            print(f"step: {timestep}/{epoch_time_step}, loss: {loss:.4f}, cer: {cer:.2f}, time: {h}h {m}m {s}s")
+            print(f"step: {timestep}/{epoch_time_step}, loss: {loss:.4f}, cer: {cer:.2f}, time: {h}h {m}m {s:.2f}s")
 
             if timestep % self.save_result_every == 0:
                 self._save_step_result(self.train_step_result, epoch_loss_total / total_num, cer)
