@@ -329,7 +329,8 @@ class SupervisedTrainer(object):
 
         Checkpoint(model, self.optimizer, self.trainset_list, self.validset, epoch).save()
         logger.info('train() completed')
-        print(f"epoch_loss_total / total_num: {epoch_loss_total / total_num}, cer: {cer}")
+        train_loss = epoch_loss_total / total_num
+        print(f"train_loss: {train_loss:.4f}, train_cer: {cer:.4f}")
 
         return model, epoch_loss_total / total_num, cer
 
@@ -372,7 +373,7 @@ class SupervisedTrainer(object):
                 
             cer = self.metric(targets[:, 1:], y_hats)
 
-        print(f"validation_cer: {cer}")
+        print(f"valid_cer: {cer:.4f}")
         self._save_result(target_list, predict_list)
         logger.info('validate() completed')
 
