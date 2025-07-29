@@ -304,6 +304,7 @@ class SupervisedTrainer(object):
                             self.optimizer.get_lr(),
                         ))
                 begin_time = time.time()
+            print(f"\rstep: {timestep}/{epoch_time_step}, loss: {loss:.4f}, cer: {cer:.2f}", end="")
 
             if timestep % self.save_result_every == 0:
                 self._save_step_result(self.train_step_result, epoch_loss_total / total_num, cer)
